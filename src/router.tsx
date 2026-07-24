@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import { RootLayout } from './components/layout/RootLayout'
-// import { SimulationFormPage } from './pages/SimulationFormPage'
+import { SimulationFormPage } from './pages/SimulationFormPage.tsx'
 // import { SimulationResultsPage } from './pages/SimulationResultsPage'
 
 export const router = createBrowserRouter([
@@ -10,8 +10,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        // element: <SimulationFormPage />,
-        element: <div>Opa</div>
+        element: <SimulationFormPage />,
       },
       {
         path: '/resultado/:id',
