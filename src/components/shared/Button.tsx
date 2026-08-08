@@ -4,10 +4,16 @@ import type { ButtonHTMLAttributes } from 'react'
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: 'primary' | 'secondary' | 'ghost'
   icon?: LucideIcon
+  size: 'base' | 'fit'
 }
 
 const baseClasses =
-  'flex cursor-pointer items-center justify-center font-medium text-sm gap-2 px-4 py-3 transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-80'
+  'flex cursor-pointer items-center justify-center font-medium text-sm gap-2 transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-80'
+
+const sizeClasses = {
+  base: 'px-4 py-3',
+  fit: 'p-0',
+}
 
 const variantClasses = {
   primary: 'bg-primary text-primary-foreground font-semibold rounded-xl',
@@ -20,12 +26,18 @@ export function Button({
   icon: Icon,
   children,
   className,
+  size,
   ...props
 }: ButtonProps) {
   return (
     <button
       {...props}
-      className={[baseClasses, variantClasses[variant], className].join(' ')}
+      className={[
+        baseClasses,
+        sizeClasses[size || 'base'],
+        variantClasses[variant],
+        className,
+      ].join(' ')}
     >
       {Icon && <Icon size={20} />}
       {children}
