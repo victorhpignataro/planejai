@@ -64,3 +64,48 @@ export function buildAIPrompt(simulation: SimulationRecord) {
       - "needs_adjustment": saldo negativo de até 20% do valor da economia mensal necessária
       - "unfeasible": saldo negativo superior a 20% do valor da economia mensal necessária`
 }
+
+export function buildChatPrompt(
+  simulation: SimulationRecord,
+  question: string,
+  history: { role: 'user' | 'assistant'; content: string }[],
+) {
+  const { income, expenses, debts, goalName, goalAmount, goalDeadline } =
+    simulation
+
+  const monthlySavings = calcMonthlySavings(simulation)
+  const monthlySavingsNeeded =
+    parseCurrency(goalAmount) / parseInt(goalDeadline)
+
+  const historyText = history
+    .map((msg) => {
+      const role = msg.role === 'user' ? 'Usuário' : 'Educador Financeiro'
+      return `${role}: ${msg.content}`
+    })
+    .join('\n')
+
+  return `Você é um educador financeiro especializado em finanças pessoais.
+    O usuário acabou de fazer uma simulação financeira e quer fazer perguntas sobre ela.
+    Responda de forma clara, didática e encorajadora, em português do Brasil.
+    Fale sempre em segunda pessoa ("você tem...", "sua meta...").
+
+    Dados da simulação:
+    - Renda mensal bruta: ${income}
+    - Custos fixos essenciais: ${expenses}
+    - Dívidas e parcelas mensais: ${debts}
+    - Valor disponível por mês: ${monthlySavings} reais
+    - Meta: ${goalName}
+    - Custo da meta: ${goalAmount}
+    - Prazo desejado: ${goalDeadline} meses
+    - Economia mensal necessária para atingir a meta no prazo: ${monthlySavingsNeeded} reais
+    - Saldo após reserva para a meta: ${monthlySavings - monthlySavingsNeeded} reais
+
+    Histórico da conversa:
+    ${historyText}
+
+    Pergunta do usuário:
+    ${question}
+
+    Responda diretamente, sem saudar novamente, de forma objetiva e personalizada com base nos dados da simulação.
+    Use parágrafos curtos e linguagem simples. Nunca use markdown na resposta.`
+}
